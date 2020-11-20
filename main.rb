@@ -91,8 +91,16 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
+# multiply_els
 
-
+#my_map
+def my_map1
+  evaluate = ->
+  new_arr=[]
+  
+  new_arr
+end   
+#my_map
 
  test_array = [1, 2, 2]
 
