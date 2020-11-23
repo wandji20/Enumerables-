@@ -66,7 +66,7 @@ module Enumerable
     end
     index
   end
-  # my_none
+  # my_count
 
   # my_map
   def my_map(proc = nil, &block)
@@ -106,8 +106,7 @@ def multiply_els(array)
 end
 
 # my_proc = Proc.new { |x| x*10 }
-test_array = [1, 2, 2]
-
+#test_array = [1, 2, 2]
 # test_array.my_each {|item| p item }
 # test_array.my_each_with_index { |item, index| p item, index }
 # test_array.my_select {|num| num.even? }
