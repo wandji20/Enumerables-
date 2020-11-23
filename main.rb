@@ -32,9 +32,9 @@ module Enumerable
     flag = true
     each do |item|
       feedback = yield(item)
-      flag = false if (feedback == false) || (feedback == nil)
+      flag = false if (feedback == false) || (feedback.nil?)
     end
-    return flag
+    flag
   end
   # my_all?
 
@@ -50,11 +50,11 @@ module Enumerable
 
   # my_none?
   def my_none?()
-    isNone = true
+    is_none = true
     each do |item|
-      isNone = false if yield(item)
+      is_none = false if yield(item)
     end
-    isNone
+    is_none
   end
   # my_none?
 
