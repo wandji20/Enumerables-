@@ -1,6 +1,7 @@
 module Enumerable
   # my_each()
   def my_each()
+    return to_enum(:each) unless block_given?
     each do |item|
       yield item if block_given?
     end
@@ -9,6 +10,7 @@ module Enumerable
 
   # my_each_with_index()
   def my_each_with_index()
+    return to_enum(:each) unless block_given?
     index = 0
     each do |item|
       yield(item, index) if block_given?
@@ -19,23 +21,55 @@ module Enumerable
 
   # my_select
   def my_select()
+    return to_enum(:each) unless block_given?
     new_arr = []
     each do |item|
       new_arr << item if yield(item)
     end
     new_arr
   end
-  # my_select
+  # my_select flag = false unless item.kind_of? arg
 
   # my_all?
-  def my_all?()
+  def my_all?(arg = nil)
     flag = true
-    each do |item|
-      feedback = yield(item)
-      flag = false if (feedback == false) || feedback.nil?
+
+    if arg.class == Class
+        each do |item|
+          flag = false unless item.kind_of? arg
+        end
+        return flag
+    elsif arg.class == Regexp
+      each do |item|
+        flag = false if arg.match(item.to_s) == nil
+      end
+      return flag
+    elsif block_given?
+      each do |item|
+        feedback = yield(item)
+        flag = false if (feedback == false) || feedback.nil?
+      end
+      return flag
+    elsif block_given?
+      each do |item|
+        feedback = yield(item)
+        flag = false if (feedback == false) || feedback.nil?
+      end
+      return flag
     end
-    flag
+    
+    unless block_given?
+      arg = proc { |obj| obj }
+      each do |item|
+        feedback = arg.call(item)
+        flag = false if (feedback == false) || feedback.nil?
+      end
+      flag
+    end
+    
   end
+  
+  # end
   # my_all?
 
   # my_any
@@ -106,12 +140,12 @@ def multiply_els(array)
 end
 
 # my_proc = Proc.new { |x| x * 10 }
-# test_array = [1, 2, 2]
+ test_array = [2, 1, 2]
 
-# p test_array.my_each {|item| p item }
+# p test_array.my_each
 # p test_array.my_each_with_index { |item, index| p item, index }
 # p test_array.my_select {|num| num.even? }
-# p test_array.my_all? {|num| num < 4 }
+# p test_array.my_all? {|x| x >5}
 # p test_array.my_any? {|num| num == 1}
 # p test_array.my_none? {|num| num > 5 }
 # p test_array.my_count
