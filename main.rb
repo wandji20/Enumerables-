@@ -84,14 +84,40 @@ module Enumerable
     return result
   end
   # my_inject
-  def my_map1(proc, &proc1)
-    new_arr=[]
-    for item in self
-      new_item = proc.call(item)
+
+
+
+  # def my_map1(&para)
+  #   p self.class
+  #   new_arr = []
+  #   if para.is_a? Proc
+  #     for item in self
+  #       new_item = para.call(item)
+  #       new_arr << new_item
+  #     end
+  #     return new_arr
+  #   end
+  # end
+
+  def my_map1(proc = nil , &block)
+    new_arr = []
+
+    if proc.is_a? Proc
+      for item in self do
+        new_item = proc.call(item)
+        new_arr << new_item
+      end
+      return new_arr
+    end
+
+    for item in self do
+      new_item = block.call(item)
       new_arr << new_item
     end
-    new_arr
+
+    return new_arr
   end
+
 
 end
 
@@ -99,19 +125,12 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
-# multiply_els
 
-#my_map
+my_proc = Proc.new { |x| x*10 }
 
-
-my_proc = Proc.new{|x| x*10}
-#my_map
-
- test_array = [1, 2, 2]
-
+test_array = [1, 2, 2]
 
 p test_array.my_map1(my_proc)
-p test_array.my_map1{|x| x*100}
 # test_array.my_each {|item| p item }
 # test_array.my_each_with_index { |item, index| p item, index }
 # test_array.my_select {|num| num.even? }
