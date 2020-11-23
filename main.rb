@@ -64,7 +64,7 @@ module Enumerable
   #my_none
 
   #my_map
-  def my_map
+  def my_map()
     new_arr=[]
     for item in self
       transformed=yield(item)
@@ -84,6 +84,14 @@ module Enumerable
     return result
   end
   # my_inject
+  def my_map1(proc, &proc1)
+    new_arr=[]
+    for item in self
+      new_item = proc.call(item)
+      new_arr << new_item
+    end
+    new_arr
+  end
 
 end
 
@@ -94,18 +102,16 @@ end
 # multiply_els
 
 #my_map
-def my_map1
-  evaluate = ->
-  new_arr=[]
-  
-  new_arr
-end   
+
+
+my_proc = Proc.new{|x| x*10}
 #my_map
 
  test_array = [1, 2, 2]
 
 
-
+p test_array.my_map1(my_proc)
+p test_array.my_map1{|x| x*100}
 # test_array.my_each {|item| p item }
 # test_array.my_each_with_index { |item, index| p item, index }
 # test_array.my_select {|num| num.even? }
