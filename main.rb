@@ -105,16 +105,17 @@ def multiply_els(array)
   array.my_inject(:*)
 end
 
-# my_proc = Proc.new { |x| x*10 }
-#test_array = [1, 2, 2]
-# test_array.my_each {|item| p item }
-# test_array.my_each_with_index { |item, index| p item, index }
-# test_array.my_select {|num| num.even? }
-# test_array.my_all? {|num| num<4 }
-# test_array.my_any? {|num| num==1}
-# test_array.my_none? {|num| num > 5 }
-# test_array.my_count
-# test_array.my_map{|item| item+2}
-# test_array.my_map(my_proc)
-# test_array.my_inject(:/)
-# multiply_els(test_array)
+# my_proc = Proc.new { |x| x * 10 }
+# test_array = [1, 2, 2]
+
+# p test_array.my_each {|item| p item }
+# p test_array.my_each_with_index { |item, index| p item, index }
+# p test_array.my_select {|num| num.even? }
+# p test_array.my_all? {|num| num < 4 }
+# p test_array.my_any? {|num| num == 1}
+# p test_array.my_none? {|num| num > 5 }
+# p test_array.my_count
+# p test_array.my_map{|item| item + 2}
+# p test_array.my_map(my_proc) { |x| puts x * 100 }
+# p test_array.my_inject(:/)
+# p multiply_els(test_array)
