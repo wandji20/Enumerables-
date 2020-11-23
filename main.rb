@@ -32,7 +32,7 @@ module Enumerable
     flag = true
     each do |item|
       feedback = yield(item)
-      flag = false if (feedback == false) || (feedback.nil?)
+      flag = false if (feedback == false) || feedback.nil?
     end
     flag
   end
