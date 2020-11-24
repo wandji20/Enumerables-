@@ -45,6 +45,8 @@ module Enumerable
       my_each { |item| flag = false if arg.match(item.to_s).nil? }
     when String
       my_each { |item| flag = false unless item.include? arg }
+    when Integer
+      my_each { |item| flag = false unless item == arg }
     when nil
       unless block_given?
         arg = proc { |obj| obj }
@@ -72,11 +74,16 @@ module Enumerable
       my_each { |item| flag = true if yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
-      my_each { |item| flag = true unless (arg.call(item) == false) || arg.call(item).nil? }
+      # my_each do |item|
+      #    flag = true if (arg.call(item) # != true) || arg.call(item).nil? 
+      # end
+      arg = proc { |obj| obj }
+      my_each do |item|
+         flag = true unless [nil,false].include?(item)
+      end
     end
     flag
   end
-
   # my_none?
   def my_none?(arg = nil)
     flag = true
@@ -165,7 +172,7 @@ end
 #                 #
 ###  ###  ####  ###
 
-# test_array = [1, 3, 3]
+# test_array = [nil,false,1.1]
 # test_array = ["as1da","asdas"]
 # test_array = ['abc', 123, 'hijk', 'lmnop']
 # my_proc = Proc.new { |x| x * 10 }
@@ -175,7 +182,7 @@ end
 # p test_array.my_each
 # p test_array.my_each_with_index { |item, index| p item, index }
 # p test_array.my_select {|num| num.even? }
-# p test_array.my_all?("2")
+# p test_array.my_all?(1)
 # p test_array.my_any?
 # p test_array.my_none?("1")
 # p test_array.my_count { |ele| ele.is_a? String }
