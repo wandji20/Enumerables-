@@ -4,6 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
+# rubocop:disable  Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
 module Enumerable
   # my_each()
   def my_each()
