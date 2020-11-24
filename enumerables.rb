@@ -71,9 +71,8 @@ module Enumerable
     if block_given? && arg.nil?
       my_each { |item| flag = true if yield(item) }
     elsif !block_given? && arg.nil?
-      flag = true
       arg = proc { |obj| obj }
-      my_each { |item| flag = false if (arg.call(item) == false) || arg.call(item).nil? }
+      my_each { |item| flag = true unless (arg.call(item) == false) || arg.call(item).nil? }
     end
     flag
   end
@@ -90,7 +89,7 @@ module Enumerable
       my_each { |item| flag = false if item.to_s.include? arg }
     end
     if block_given? && arg.nil?
-      my_each { |item| flag = true if yield(item) }
+      my_each { |item| flag = false if yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
       my_each { |item| flag = false if arg.call(item) }
@@ -166,8 +165,8 @@ end
 #                 #
 ###  ###  ####  ###
 
-# test_array = [1, 2, 3,5]
-# test_array = %w[a21bc de21fg hi12jk lm12nop]
+# test_array = [1, 3, 3]
+# test_array = ["as1da","asdas"]
 # test_array = ['abc', 123, 'hijk', 'lmnop']
 # my_proc = Proc.new { |x| x * 10 }
 
@@ -176,14 +175,14 @@ end
 # p test_array.my_each
 # p test_array.my_each_with_index { |item, index| p item, index }
 # p test_array.my_select {|num| num.even? }
-# p test_array.my_all? { |ele| ele.length < 100 }
-# p test_array.my_any?(/0/)
-# p test_array.my_none?(/a/)
+# p test_array.my_all?("2")
+# p test_array.my_any?
+# p test_array.my_none?("1")
 # p test_array.my_count { |ele| ele.is_a? String }
 # p test_array.my_map { |x| x * 100 }
 # p test_array.my_map(my_proc) { |x| puts x * 100 }
 # p test_array.my_inject { |sum, n| sum * n }
+# p test_array.inject(:+)
 # p multiply_els(test_array)
-# test_array.inject { |sum, n| sum + n }
 
 # rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
