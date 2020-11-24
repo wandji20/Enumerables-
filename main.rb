@@ -63,7 +63,6 @@ module Enumerable
     when Class
       my_each { |item| flag = true if item.is_a? arg }
     when Regexp
-      p 'here1'
       my_each { |item| flag = true if arg.match(item.to_s) }
     when String
       my_each { |item| flag = true if item.to_s.include? arg }
@@ -133,28 +132,20 @@ module Enumerable
 
   # my_inject
   def my_inject(init = nil, sign = nil)
-    return LocalJumpError unless block_given? || sign || init || my_all?(String)
 
+    return LocalJumpError unless block_given? || sign || init || my_all?(String)
     if init && sign
       result = init
-      my_each do |item|
-        result = result.send(sign, item)
-      end
+      my_each { |item| result = result.send(sign, item) }
     elsif init.is_a?(Symbol) && sign.nil?
       result = first
-      my_each do |item|
-        result = result.send(init, item)
-      end
+      my_each { |item| result = result.send(init, item) }
     elsif block_given?
       result = init || first
-      (1..length - 1).each do |i|
-        result = yield(result, self[i])
-      end
+      (1..length - 1).each { |i| result = yield(result, self[i]) }
     elsif my_all?(String)
       longst_word = 0
-      my_each do |item|
-        longst_word = item.length if item.length > longst_word
-      end
+      my_each { |item| longst_word = item.length if item.length > longst_word }
       return longst_word
     end
     result
@@ -175,7 +166,7 @@ end
 ###  ###  ####  ###
 
 # test_array = [1, 2, 3,5]
-test_array = %w[a21bc de21fg hi12jk lm12nop]
+# test_array = %w[a21bc de21fg hi12jk lm12nop]
 # test_array = ['abc', 123, 'hijk', 'lmnop']
 # my_proc = Proc.new { |x| x * 10 }
 
@@ -184,7 +175,7 @@ test_array = %w[a21bc de21fg hi12jk lm12nop]
 # p test_array.my_each
 # p test_array.my_each_with_index { |item, index| p item, index }
 # p test_array.my_select {|num| num.even? }
-p test_array.my_all? { |ele| ele.length < 100 }
+# p test_array.my_all? { |ele| ele.length < 100 }
 # p test_array.my_any?(/0/)
 # p test_array.my_none?(/a/)
 # p test_array.my_count { |ele| ele.is_a? String }
