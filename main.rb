@@ -39,29 +39,23 @@ module Enumerable
   # my_all?
   def my_all?(arg = nil)
     flag = true
-    if arg.instance_of?(Class)
-      each do |item|
-        flag = false unless item.is_a? arg
-      end
+    case arg
+    when arg.instance_of?(Class)
+      each { |item| flag = false unless item.is_a? arg }
       return flag
-    elsif arg.instance_of?(Regexp)
-      each do |item|
-        flag = false if arg.match(item.to_s).nil?
-      end
+    when arg.instance_of?(Regexp)
+      each { |item| flag = false if arg.match(item.to_s).nil? }
       return flag
-    elsif arg.instance_of?(String)
-      each do |item|
-        flag = false unless item.include? arg
-      end
+    when arg.instance_of?(String)
+      each {|item| flag = false unless item.include? arg}
       return flag
-    elsif block_given?
+    when block_given?
       each do |item|
         feedback = yield(item)
         flag = false if (feedback == false) || feedback.nil?
       end
       return flag
-    end
-    unless block_given?
+    when !(block_given?)
       arg = proc { |obj| obj }
       each do |item|
         feedback = arg.call(item)
@@ -69,6 +63,31 @@ module Enumerable
       end
       flag
     end
+  
+    #if arg.instance_of?(Class)
+    #  each { |item| flag = false unless item.is_a? arg }
+    #  return flag
+    #elsif arg.instance_of?(Regexp)
+    #  each { |item| flag = false if arg.match(item.to_s).#nil? }
+    #  return flag
+    #elsif arg.instance_of?(String)
+    #  each {|item| flag = false unless item.include? arg}
+    #  return flag
+    #elsif block_given?
+    #  each do |item|
+    #    feedback = yield(item)
+    #    flag = false if (feedback == false) || feedback.nil?
+    #  end
+    #  return flag
+    #end
+    #unless block_given?
+    #  arg = proc { |obj| obj }
+    #  each do |item|
+    #    feedback = arg.call(item)
+    #    flag = false if (feedback == false) || feedback.nil?
+    #  end
+    #  flag
+    #end
   end
 
   # my_any?
@@ -193,9 +212,13 @@ module Enumerable
       end
     elsif block_given?
       result = init || first
-      each do |item|
-        result = yield(result, item)
+      for i in (1..length-1) 
+        result = yield(result, self[i])
       end
+      #each do |item|
+        #result = yield(result, item)
+      #end
+      
     elsif my_all?(String)
       longst_word = 0
       each do |item|
@@ -220,7 +243,7 @@ end
 #                 #
 ###  ###  ####  ###
 
-# test_array = [1, 2, 3]
+# test_array = [1, 2, 3,5]
 # test_array = ['abc','defg','hijk','lmnop']
 # test_array = ['abc', 123, 'hijk', 'lmnop']
 # my_proc = Proc.new { |x| x * 10 }
@@ -236,5 +259,8 @@ end
 # p test_array.my_count { |ele| ele.is_a? String }
 # p test_array.my_map { |x| x * 100 }
 # p test_array.my_map(my_proc) { |x| puts x * 100 }
-# p test_array.my_inject { |sum, n| sum + n }
+# test_array.my_inject { |sum, n| sum * n }
 # p multiply_els(test_array)
+# test_array.inject { |sum, n| sum + n }
+
+
