@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable  Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
+# rubocop:disable  Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 module Enumerable
   # my_each()
   def my_each()
@@ -133,8 +133,8 @@ module Enumerable
 
   # my_inject
   def my_inject(init = nil, sign = nil)
-
     return LocalJumpError unless block_given? || sign || init || my_all?(String)
+
     if init && sign
       result = init
       my_each { |item| result = result.send(sign, item) }
@@ -185,3 +185,5 @@ end
 # p test_array.my_inject { |sum, n| sum * n }
 # p multiply_els(test_array)
 # test_array.inject { |sum, n| sum + n }
+
+# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
