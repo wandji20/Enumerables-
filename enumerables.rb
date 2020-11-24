@@ -69,6 +69,10 @@ module Enumerable
       my_each { |item| flag = true if arg.match(item.to_s) }
     when String
       my_each { |item| flag = true if item.to_s.include? arg }
+    when Integer
+      # Added for integer like in my_all
+      my_each { |item| flag = true if item == arg }
+      # Added for integer like in my_all
     end
     if block_given? && arg.nil?
       my_each { |item| flag = true if yield(item) }
@@ -94,9 +98,13 @@ module Enumerable
       my_each { |item| flag = false if arg.match(item) }
     when String
       my_each { |item| flag = false if item.to_s.include? arg }
+    when Integer
+      # Added for integer like in my_all
+      my_each { |item| flag = false if item == arg }
+      # Added for integer like in my_all
     end
     if block_given? && arg.nil?
-      my_each { |item| flag = false if yield(item) }
+      my_each { |item| flag = false if  yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
       my_each { |item| flag = false if arg.call(item) }
@@ -172,7 +180,7 @@ end
 #                 #
 ###  ###  ####  ###
 
-# test_array = [nil,false,1.1]
+ test_array = [3,400]
 # test_array = ["as1da","asdas"]
 # test_array = ['abc', 123, 'hijk', 'lmnop']
 # my_proc = Proc.new { |x| x * 10 }
@@ -184,7 +192,9 @@ end
 # p test_array.my_select {|num| num.even? }
 # p test_array.my_all?(1)
 # p test_array.my_any?
-# p test_array.my_none?("1")
+# p test_array.my_none?(3)
+ # => false
+ p [1, 2, 3, 4].my_inject(10) { |accum, elem| accum + elem }
 # p test_array.my_count { |ele| ele.is_a? String }
 # p test_array.my_map { |x| x * 100 }
 # p test_array.my_map(my_proc) { |x| puts x * 100 }
