@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/ModuleLength,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 module Enumerable
   # my_each()
   def my_each()
@@ -159,9 +159,9 @@ module Enumerable
         (1..length - 1).my_each { |item| result = yield(result, self[item]) }
       end
     elsif my_all?(String)
-      longst_word = 0
-      my_each { |item| longst_word = item.length if item.length > longst_word }
-      return longst_word
+      longest_word = 0
+      my_each { |item| longest_word = item.length if item.length > longest_word }
+      return longest_word
     elsif init.is_a?(String)
       result = first
       (1..length - 1).my_each { |item| result = result.send(init.to_sym, self[item]) }
@@ -176,6 +176,7 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
+# rubocop:enable Metrics/ModuleLength,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 
 ### ### ### ### ###
 #                 #
@@ -205,5 +206,3 @@ end
 # p [5, 1, 2].my_inject('+') # => 8
 # p (5..10).my_inject(2, :*) # should return 302400
 # p (5..10).my_inject(4) { |prod, n| prod * n } # should return 604800
-
-# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
