@@ -158,7 +158,7 @@ module Enumerable
       else
         result = first
         range_arr = to_a
-        (1..size-1).my_each { |item| result = yield(result, range_arr[item]) }
+        (1..size - 1).my_each { |item| result = yield(result, range_arr[item]) }
       end
     end
     result
