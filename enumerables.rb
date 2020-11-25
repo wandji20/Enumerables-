@@ -70,24 +70,19 @@ module Enumerable
     when String
       my_each { |item| flag = true if item.to_s.include? arg }
     when Integer
-      # Added for integer like in my_all
       my_each { |item| flag = true if item == arg }
-      # Added for integer like in my_all
     end
     if block_given? && arg.nil?
       my_each { |item| flag = true if yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
-      # my_each do |item|
-      #    flag = true if (arg.call(item) # != true) || arg.call(item).nil? 
-      # end
-      arg = proc { |obj| obj }
       my_each do |item|
-         flag = true unless [nil,false].include?(item)
+        flag = true unless [nil, false].include?(item)
       end
     end
     flag
   end
+
   # my_none?
   def my_none?(arg = nil)
     flag = true
@@ -104,7 +99,7 @@ module Enumerable
       # Added for integer like in my_all
     end
     if block_given? && arg.nil?
-      my_each { |item| flag = false if  yield(item) }
+      my_each { |item| flag = false if yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
       my_each { |item| flag = false if arg.call(item) }
@@ -156,13 +151,23 @@ module Enumerable
       result = first
       my_each { |item| result = result.send(init, item) }
     elsif block_given?
-      result = init || first
-      (1..length - 1).each { |i| result = yield(result, self[i]) }
+      if init
+        result = init
+        my_each { |item| result = yield(result, item) }
+      else
+        result = first
+        (1..length - 1).my_each { |item| result = yield(result, self[item]) }
+      end
     elsif my_all?(String)
       longst_word = 0
       my_each { |item| longst_word = item.length if item.length > longst_word }
       return longst_word
+
+    elsif init.is_a?(String)
+      result = first
+      (1..length - 1).my_each { |item| result = result.send(init.to_sym, self[item]) }
     end
+
     result
   end
 
@@ -180,11 +185,6 @@ end
 #                 #
 ###  ###  ####  ###
 
- test_array = [3,400]
-# test_array = ["as1da","asdas"]
-# test_array = ['abc', 123, 'hijk', 'lmnop']
-# my_proc = Proc.new { |x| x * 10 }
-
 #############################################
 
 # p test_array.my_each
@@ -193,13 +193,19 @@ end
 # p test_array.my_all?(1)
 # p test_array.my_any?
 # p test_array.my_none?(3)
- # => false
- p [1, 2, 3, 4].my_inject(10) { |accum, elem| accum + elem }
+# p [1, 2, 3, 4].my_inject(10) { |accum, elem| accum + elem }
 # p test_array.my_count { |ele| ele.is_a? String }
 # p test_array.my_map { |x| x * 100 }
 # p test_array.my_map(my_proc) { |x| puts x * 100 }
 # p test_array.my_inject { |sum, n| sum * n }
 # p test_array.inject(:+)
 # p multiply_els(test_array)
+# puts 'my_inject'
+# puts '---------'
+# p [1, 2, 3, 4].my_inject(10) { |accum, elem| accum + elem } # => 20
+# p [1, 2, 3, 4].my_inject { |accum, elem| accum + elem } # => 10
+# p [5, 1, 2].my_inject('+') # => 8
+# p (5..10).my_inject(2, :*) # should return 302400
+# p (5..10).my_inject(4) { |prod, n| prod * n } # should return 604800
 
 # rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
