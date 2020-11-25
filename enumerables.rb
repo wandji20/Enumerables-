@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable  Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 module Enumerable
   # my_each()
   def my_each()
@@ -162,12 +162,10 @@ module Enumerable
       longst_word = 0
       my_each { |item| longst_word = item.length if item.length > longst_word }
       return longst_word
-
     elsif init.is_a?(String)
       result = first
       (1..length - 1).my_each { |item| result = result.send(init.to_sym, self[item]) }
     end
-
     result
   end
 
