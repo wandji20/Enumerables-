@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable Metrics/ModuleLength,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize
 module Enumerable
   # my_each()
   def my_each()
@@ -143,11 +143,10 @@ module Enumerable
     if init && sign
       result = init
       my_each { |item| result = result.send(sign, item) }
-      
-    elsif init.is_a?(Symbol) && sign.nil? && self.class != Range #hreeeeeeeeeeeerererererer
+    elsif init.is_a?(Symbol) && sign.nil? && self.class != Range # hreeeeeeeeeeeerererererer
       result = first
       (1..length - 1).my_each { |item| result = result.send(init, self[item]) }
-    elsif init.is_a?(Symbol) && self.class == Range
+    elsif init.is_a?(Symbol) && instance_of?(Range)
       result = first
       range_arr = to_a
       (1..size - 1).my_each { |item| result = result.send(init, range_arr[item]) }
@@ -155,10 +154,10 @@ module Enumerable
       if init
         result = init
         my_each { |item| result = yield(result, item) }
-      elsif init.nil? && self.class != Range 
+      elsif init.nil? && self.class != Range
         result = first
         (1..length - 1).my_each { |item| result = yield(result, self[item]) }
-      elsif init.nil? && self.class == Range
+      elsif init.nil? && instance_of?(Range)
         result = first
         range_arr = to_a
         range_arr.my_each { |item| result = yield(result, item) }
@@ -181,7 +180,8 @@ end
 def multiply_els(array)
   array.my_inject(:*)
 end
-# rubocop:enable Metrics/ModuleLength,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+
+# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize
 
 ### ### ### ### ###
 #                 #
@@ -190,8 +190,7 @@ end
 ###  ###  ####  ###
 
 #############################################
-p multiply_els([1,2,3]) == 6
-
+# p multiply_els([1,2,3]) == 6
 # p (1..3).my_inject() { |total, num| total*num }
 # # p (1..3).inject(&proc{|total, num| total*num})
 # p (1..3).inject(&proc{|total, num| total*num}) == (1..3).my_inject(&proc{|total, num| total*num})
