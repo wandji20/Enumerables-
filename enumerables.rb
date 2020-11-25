@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize
+# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
 module Enumerable
   # my_each()
   def my_each()
@@ -143,32 +143,23 @@ module Enumerable
     if init && sign
       result = init
       my_each { |item| result = result.send(sign, item) }
-    elsif init.is_a?(Symbol) && sign.nil? && self.class != Range # hreeeeeeeeeeeerererererer
-      result = first
-      (1..length - 1).my_each { |item| result = result.send(init, self[item]) }
-    elsif init.is_a?(Symbol) && instance_of?(Range)
+    elsif init.is_a?(Symbol) || init.is_a?(String)
       result = first
       range_arr = to_a
-      (1..size - 1).my_each { |item| result = result.send(init, range_arr[item]) }
-    elsif block_given?
-      if init
-        result = init
-        my_each { |item| result = yield(result, item) }
-      elsif init.nil? && self.class != Range
-        result = first
-        (1..length - 1).my_each { |item| result = yield(result, self[item]) }
-      elsif init.nil? && instance_of?(Range)
-        result = first
-        range_arr = to_a
-        range_arr.my_each { |item| result = yield(result, item) }
-      end
+      (1..size - 1).my_each { |item| result = result.send(init.to_sym, range_arr[item]) }
     elsif my_all?(String)
       longest_word = 0
       my_each { |item| longest_word = item.length if item.length > longest_word }
       return longest_word
-    elsif init.is_a?(String)
-      result = first
-      (1..length - 1).my_each { |item| result = result.send(init.to_sym, self[item]) }
+    elsif block_given?
+      if init
+        result = init
+        my_each { |item| result = yield(result, item) }
+      else
+        result = first
+        range_arr = to_a
+        (1..size-1).my_each { |item| result = yield(result, range_arr[item]) }
+      end
     end
     result
   end
@@ -181,7 +172,7 @@ def multiply_els(array)
   array.my_inject(:*)
 end
 
-# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize
+# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
 
 ### ### ### ### ###
 #                 #
@@ -193,6 +184,7 @@ end
 # p multiply_els([1,2,3]) == 6
 # p (1..3).my_inject() { |total, num| total*num }
 # # p (1..3).inject(&proc{|total, num| total*num})
+# test_array = [1,2,3,10]
 # p (1..3).inject(&proc{|total, num| total*num}) == (1..3).my_inject(&proc{|total, num| total*num})
 # p test_array.my_each
 # p [1, 2, 3, 4].my_each_with_index
@@ -205,12 +197,13 @@ end
 # p test_array.my_map { |x| x * 100 }
 # p test_array.my_map(my_proc) { |x| puts x * 100 }
 # p test_array.my_inject { |sum, n| sum * n }
-# p test_array.inject(:+)
+# p (1..5).my_inject("-")
 # p multiply_els(test_array)
 # puts 'my_inject'
 # puts '---------'
 # p [1, 2, 3, 4].my_inject(10) { |accum, elem| accum + elem } # => 20
-# p [1, 2, 3, 4].my_inject { |accum, elem| accum + elem } # => 10
+# [1, 2, 3, 4].my_inject { |accum, elem| accum + elem } # => 10
+# (1..4).my_inject { |accum, elem| accum + elem }
 # p [5, 1, 2].my_inject('+') # => 8
 # p (5..10).my_inject(2, :*) # should return 302400
 # p (5..10).my_inject(4) { |prod, n| prod * n } # should return 604800
