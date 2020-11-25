@@ -4,7 +4,7 @@
 #     Enumerables     #     @od-c0d3r     #
 ###  ###  ####  ### ### ### ### ### ### ###
 
-# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
+# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/MethodLength
 module Enumerable
   # my_each()
   def my_each()
@@ -140,8 +140,8 @@ module Enumerable
   def my_inject(init = nil, sign = nil)
     raise LocalJumpError unless block_given? || sign || init || my_all?(String)
 
-    if init && sign
-      result = init
+    if init && sign 
+      result = init 
       my_each { |item| result = result.send(sign, item) }
     elsif init.is_a?(Symbol) || init.is_a?(String)
       result = first
@@ -152,8 +152,7 @@ module Enumerable
       my_each { |item| longest_word = item.length if item.length > longest_word }
       return longest_word
     elsif block_given?
-      if init
-        result = init
+      if init result = init 
         my_each { |item| result = yield(result, item) }
       else
         result = first
@@ -172,7 +171,7 @@ def multiply_els(array)
   array.my_inject(:*)
 end
 
-# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/AbcSize,Metrics/MethodLength
+# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/MethodLength
 
 ### ### ### ### ###
 #                 #
