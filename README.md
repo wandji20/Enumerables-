@@ -28,7 +28,7 @@ Follow these steps to get a local copy up and running :
 1. Type `git init` in the Terminal.
 1. Clone the repository to your local machine `git clone https://github.com/wandji20/Enumerables-.git`.
 1. Cd into the repository `cd Enumerables-`.
-1. Open the `main.rb` file and run it with your editor, or excute the file using ruby runtime `ruby main.rb`
+1. Open the `main.rb` file and run it with your editor, or excute the file using ruby runtime `ruby enumerables.rb`
 
 ## Authors
 

@@ -76,9 +76,7 @@ module Enumerable
       my_each { |item| flag = true if yield(item) }
     elsif !block_given? && arg.nil?
       arg = proc { |obj| obj }
-      my_each do |item|
-        flag = true unless [nil, false].include?(item)
-      end
+      my_each { |item| flag = true unless [nil, false].include?(item) }
     end
     flag
   end
@@ -94,9 +92,7 @@ module Enumerable
     when String
       my_each { |item| flag = false if item.to_s.include? arg }
     when Integer
-      # Added for integer like in my_all
       my_each { |item| flag = false if item == arg }
-      # Added for integer like in my_all
     end
     if block_given? && arg.nil?
       my_each { |item| flag = false if yield(item) }
@@ -142,21 +138,30 @@ module Enumerable
 
   # my_inject
   def my_inject(init = nil, sign = nil)
-    return LocalJumpError unless block_given? || sign || init || my_all?(String)
+    raise LocalJumpError unless block_given? || sign || init || my_all?(String)
 
     if init && sign
       result = init
       my_each { |item| result = result.send(sign, item) }
-    elsif init.is_a?(Symbol) && sign.nil?
+      
+    elsif init.is_a?(Symbol) && sign.nil? && self.class != Range #hreeeeeeeeeeeerererererer
       result = first
-      my_each { |item| result = result.send(init, item) }
+      (1..length - 1).my_each { |item| result = result.send(init, self[item]) }
+    elsif init.is_a?(Symbol) && self.class == Range
+      result = first
+      range_arr = to_a
+      (1..size - 1).my_each { |item| result = result.send(init, range_arr[item]) }
     elsif block_given?
       if init
         result = init
         my_each { |item| result = yield(result, item) }
-      else
+      elsif init.nil? && self.class != Range 
         result = first
         (1..length - 1).my_each { |item| result = yield(result, self[item]) }
+      elsif init.nil? && self.class == Range
+        result = first
+        range_arr = to_a
+        range_arr.my_each { |item| result = yield(result, item) }
       end
     elsif my_all?(String)
       longest_word = 0
@@ -185,9 +190,13 @@ end
 ###  ###  ####  ###
 
 #############################################
+p multiply_els([1,2,3]) == 6
 
+# p (1..3).my_inject() { |total, num| total*num }
+# # p (1..3).inject(&proc{|total, num| total*num})
+# p (1..3).inject(&proc{|total, num| total*num}) == (1..3).my_inject(&proc{|total, num| total*num})
 # p test_array.my_each
-# p test_array.my_each_with_index { |item, index| p item, index }
+# p [1, 2, 3, 4].my_each_with_index
 # p test_array.my_select {|num| num.even? }
 # p test_array.my_all?(1)
 # p test_array.my_any?
@@ -206,3 +215,4 @@ end
 # p [5, 1, 2].my_inject('+') # => 8
 # p (5..10).my_inject(2, :*) # should return 302400
 # p (5..10).my_inject(4) { |prod, n| prod * n } # should return 604800
+# p [1, 2, 3, 4].my_inject
