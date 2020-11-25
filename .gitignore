@@ -3,3 +3,4 @@ Gemfile.lock
 .rubocop.yml
 .vscode/
 script.rb
+test_cases.rb

@@ -148,11 +148,12 @@ module Enumerable
       range_arr = to_a
       (1..size - 1).my_each { |item| result = result.send(init.to_sym, range_arr[item]) }
     elsif my_all?(String)
-      longest_word = 0
-      my_each { |item| longest_word = item.length if item.length > longest_word }
+      longest_word = ''
+      my_each { |item| longest_word = item if item.size > longest_word.size }
       return longest_word
     elsif block_given?
-      if init result = init
+      if init
+        result = init
         my_each { |item| result = yield(result, item) }
       else
         result = first
@@ -207,3 +208,4 @@ end
 # p (5..10).my_inject(2, :*) # should return 302400
 # p (5..10).my_inject(4) { |prod, n| prod * n } # should return 604800
 # p [1, 2, 3, 4].my_inject
+###############################
